@@ -2,18 +2,17 @@
 default:
   just --list
 
-# Bump Version
+[private]
+buid-coffee:
+  yarn coffee --compile --no-header --output ./build ./lib
+
+build: buid-coffee
+
 bump:
   yarn bump --tag
 
-# Publish to NPM
 publish:
   npm publish
 
-[private]
-compile-coffee:
-  yarn coffee --compile --no-header --output ./build ./lib
-
-# Build Flame ODM
-build: compile-coffee
-
+test file='*': build
+  yarn mocha --parallel --require coffeescript/register --reporter list ./tests/**/{{file}}.coffee
