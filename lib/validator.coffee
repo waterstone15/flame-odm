@@ -5,6 +5,7 @@ functions     = require 'lodash/functions'
 get           = require 'lodash/get'
 isArray       = require 'lodash/isArray'
 isEmpty       = require 'lodash/isEmpty'
+isFunction    = require 'lodash/isFunction'
 isPlainObject = require 'lodash/isPlainObject'
 isString      = require 'lodash/isString'
 keys          = require 'lodash/keys'
@@ -49,13 +50,18 @@ class Validator
       return
 
     if !(isArray fields) || !(every fields, isString)
-      e = "The optional second argument to Validator.ok(obj, fields) should be an
-        array of strings."
+      e = "The optional second argument to Validator.ok(obj, fields) should be
+        an array of strings."
       throw (new FlameError e)
       return
 
     errs = {}
     (each fields, ((_k) =>
+      if !(isFunction @.v[_k])
+        e = "You cannot enumerate the errors of a field that has no validator
+          function.\n Field: #{_k}"
+        throw (new FlameError e)
+        return
       (errs[_k] = true) if !(@.v[_k](get obj, _k))
       return
     ))
@@ -72,12 +78,19 @@ class Validator
       return
 
     if !(isArray fields) || !(every fields, isString)
-      e = "The optional second argument to Validator.ok(obj, fields) should be an
-        array of strings."
+      e = "The optional second argument to Validator.ok(obj, fields) should be
+        an array of strings."
       throw (new FlameError e)
       return
 
-    return (every fields, ((_k) => @.v[_k](get obj, _k)))
+    return (every fields, ((_k) =>
+      if !(isFunction @.v[_k])
+        e = "You cannot validate a field that has no validator function.\n
+          Field: #{_k}"
+        throw (new FlameError e)
+        return
+      return @.v[_k](get obj, _k))
+    )
 
 
 module.exports = Validator

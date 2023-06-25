@@ -1,11 +1,12 @@
-###
 
-A Flame is a configured instance with defaults for:
-  - base
-  - validator
-  - access
-  - adapter
-  - configuration
-  - serializer
+class Flame
 
-###
+
+  type: 'Flame'
+
+
+  constructor: () ->
+    return
+
+
+module.exports = Flame

@@ -3,6 +3,7 @@
   "version": "0.0.4-beta.1",
   "description": "Data model and query library for Firestore.",
   "scripts": {
+    "install": "just build",
     "just": "just"
   },
   "keywords": [
@@ -28,10 +29,13 @@
   "private": false,
   "dependencies": {
     "@stablelib/random": "^1.0.2",
+    "coffeescript": "^2.7.0",
     "firebase": "^9.22.2",
     "firebase-admin": "^11.9.0",
+    "just-install": "^1.0.11",
     "lodash": "^4.17.21",
     "luxon": "^3.3.0",
+    "module-alias": "^2.2.3",
     "pluralize": "^8.0.0",
     "rsvp": "^4.8.5"
   },
@@ -39,11 +43,7 @@
     "@jsdevtools/version-bump-prompt": "^6.1.0",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
-    "coffeescript": "^2.7.0",
     "dotenv": "^16.1.4",
-    "just-install": "^1.0.11",
-    "mocha": "^10.2.0",
-    "module-alias": "^2.2.3",
-    "npm-run-all": "^4.1.5"
+    "mocha": "^10.2.0"
   }
 }

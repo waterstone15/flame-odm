@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/node,yarn,firebase,coffeescript,svelte,ember
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,yarn,firebase,coffeescript,svelte,ember
 
+### Local ###
+count.sh
+
 ### Flame  ###
 /builds
 /build
