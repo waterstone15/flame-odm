@@ -19,8 +19,8 @@
   ],
   "exports": {
     ".": {
-      "import": "./build/flame-odm.js",
-      "require": "./build/flame-odm.js"
+      "import": "./build/*.js",
+      "require": "./build/*.js"
     }
   },
   "repository": "git@github.com:waterstone15/flame-odm.git",
