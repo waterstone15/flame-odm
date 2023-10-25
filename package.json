@@ -3,7 +3,12 @@
   "version": "0.0.4-beta.5",
   "description": "Data model and query library for Firestore.",
   "scripts": {
-    "just": "just"
+    "build": "run-s build:clean build:coffee",
+    "build:clean": "rm -rf ./build",
+    "build:coffee": "./node_modules/coffeescript/bin/coffee --compile --no-header --output ./build ./lib",
+    "bump": "yarn bump --tag",
+    "publish": "npm publish",
+    "test": "yarn mocha --parallel --require coffeescript/register --reporter list ./tests/**/*.coffee"
   },
   "keywords": [
     "data",
@@ -59,10 +64,8 @@
   "private": false,
   "dependencies": {
     "@stablelib/random": "^1.0.2",
-    "coffeescript": "^2.7.0",
     "firebase": "^9.22.2",
     "firebase-admin": "^11.9.0",
-    "just-install": "^1.0.11",
     "lodash": "^4.17.21",
     "luxon": "^3.3.0",
     "pluralize": "^8.0.0",
@@ -72,7 +75,10 @@
     "@jsdevtools/version-bump-prompt": "^6.1.0",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
+    "coffeescript": "^2.7.0",
+    "dotenv": "^16.3.1",
     "mocha": "^10.2.0",
-    "module-alias": "^2.2.3"
+    "module-alias": "^2.2.3",
+    "npm-run-all": "^4.1.5"
   }
 }
