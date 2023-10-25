@@ -5,8 +5,8 @@
 count.sh
 
 ### Flame  ###
-/builds
-/build
+# /builds
+# /build
 
 ### CoffeeScript ###
 *.js
