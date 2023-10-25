@@ -1,10 +1,10 @@
 ma = require 'module-alias'
-(ma.addAlias '@', __dirname + '../../')
+(ma.addAlias '@flame-odm', __dirname + '../../')
 
 chai   = require 'chai'
 assert = chai.assert
 
-Access = require '@/lib/access'
+Access = require '@flame-odm/lib/access'
 
 _ = require 'lodash'
 
@@ -52,7 +52,7 @@ describe 'Access --', ->
     (assert ok)
     return
 
-  it 'An Access can be used to generate a list of paths a role can access.', ->
+  it 'An Access can be used to generate a list of fields a role can access.', ->
     ok = false
 
     m =
@@ -62,7 +62,7 @@ describe 'Access --', ->
 
     a = (new Access m)
 
-    o = (a.paths [ 'c' ])
+    o = (a.fields [ 'c' ])
 
     ok = (_.isEqual o, [ 'b.c', 'd.e' ])
 

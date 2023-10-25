@@ -1,9 +1,8 @@
 {
   "name": "flame-odm",
-  "version": "0.0.4-beta.2",
+  "version": "0.0.4-beta.3",
   "description": "Data model and query library for Firestore.",
   "scripts": {
-    "install": "just build",
     "just": "just"
   },
   "keywords": [
@@ -19,8 +18,36 @@
   ],
   "exports": {
     ".": {
-      "import": "./build/*.js",
-      "require": "./build/*.js"
+      "import": "./build/flame.js",
+      "require": "./build/flame.js"
+    },
+    "./access": {
+      "import": "./build/access.js",
+      "require": "./build/access.js"
+    },
+    "./adapter": {
+      "import": "./build/adapter.js",
+      "require": "./build/adapter.js"
+    },
+    "./config": {
+      "import": "./build/config.js",
+      "require": "./build/config.js"
+    },
+    "./model": {
+      "import": "./build/model.js",
+      "require": "./build/model.js"
+    },
+    "./query": {
+      "import": "./build/query.js",
+      "require": "./build/query.js"
+    },
+    "./serializer": {
+      "import": "./build/serializer.js",
+      "require": "./build/serializer.js"
+    },
+    "./validator": {
+      "import": "./build/validator.js",
+      "require": "./build/validator.js"
     }
   },
   "repository": "git@github.com:waterstone15/flame-odm.git",
@@ -35,7 +62,6 @@
     "just-install": "^1.0.11",
     "lodash": "^4.17.21",
     "luxon": "^3.3.0",
-    "module-alias": "^2.2.3",
     "pluralize": "^8.0.0",
     "rsvp": "^4.8.5"
   },
@@ -44,6 +70,7 @@
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
     "dotenv": "^16.1.4",
-    "mocha": "^10.2.0"
+    "mocha": "^10.2.0",
+    "module-alias": "^2.2.3"
   }
 }

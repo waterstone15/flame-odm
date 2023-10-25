@@ -1,5 +1,4 @@
 every         = require 'lodash/every'
-FlameError    = require '@/lib/flame-error'
 get           = require 'lodash/get'
 intersection  = require 'lodash/intersection'
 isArray       = require 'lodash/isArray'
@@ -8,10 +7,12 @@ isPlainObject = require 'lodash/isPlainObject'
 isString      = require 'lodash/isString'
 keys          = require 'lodash/keys'
 merge         = require 'lodash/merge'
-union         = require 'lodash/union'
 reduce        = require 'lodash/reduce'
 set           = require 'lodash/set'
-{ flatPaths } = require '@/lib/helpers'
+union         = require 'lodash/union'
+
+FlameError    = require './flame-error'
+{ flatPaths } = require './helpers'
 
 
 
@@ -58,10 +59,10 @@ class Access
     ), {})
 
 
-  paths: (roles) ->
+  fields: (roles) ->
 
     if !(isArray roles) || !(every roles, isString)
-      e = "The first argument to Access.paths() must be an array of roles."
+      e = "The first argument to Access.fields() must be an array of roles."
       throw (new FlameError e)
       return
 

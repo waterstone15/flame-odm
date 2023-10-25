@@ -1,6 +1,5 @@
 each          = require 'lodash/each'
 every         = require 'lodash/every'
-FlameError    = require '@/lib/flame-error'
 functions     = require 'lodash/functions'
 get           = require 'lodash/get'
 isArray       = require 'lodash/isArray'
@@ -9,7 +8,9 @@ isFunction    = require 'lodash/isFunction'
 isPlainObject = require 'lodash/isPlainObject'
 isString      = require 'lodash/isString'
 keys          = require 'lodash/keys'
-{ flatPaths } = require '@/lib/helpers'
+
+FlameError    = require './flame-error'
+{ flatPaths } = require './helpers'
 
 
 class Validator

@@ -1,6 +1,7 @@
 map        = require 'lodash/map'
+each      = require 'lodash/each'
 
-Serializer = require '@/lib/serializer'
+Serializer = require './serializer'
 
 
 class Query
@@ -8,7 +9,7 @@ class Query
 
   type: 'Query'
 
-  # fbq = fb query, s = serializer, f(s) = field(s), v(s) = value(s)
+  # fbq = firestore query, s = serializer, f = fields, v = values
   ops =
     'eq':            (fbq, s, f, v) -> (fbq.where (s.fmt[s.fmts.field.db] f), '==', v)
     'not-eq':        (fbq, s, f, v) -> (fbq.where (s.fmt[s.fmts.field.db] f), '!=', v)
@@ -22,11 +23,11 @@ class Query
     'not-eq-any':   (fbq, s, f, vs) -> (fbq.where (s.fmt[s.fmts.field.db] f), 'not-in', vs)
     'order-by':      (fbq, s, f, d) -> (fbq.orderBy (s.fmt[s.fmts.field.db] f), (d ? 'asc'))
     'limit':            (fbq, _, n) -> (fbq.limit n)
-    # 'start-at':            (fbq, x) -> (fbq.startAt x)
+    'start-at':            (fbq, v) -> (fbq.startAt v)
+    # 'select':          (fbq, fs...) -> (fbq.select fs...)
     # 'end-at':              (fbq, x) -> (fbq.endAt x)
     # 'start-after' :        (fbq, x) -> (fbq.startAfter x)
     # 'end-after':           (fbq, x) -> (fbq.endAfter x)
-    # 'select':          (fbq, fs...) -> (fbq.select fs...)
 
 
   constructor: (q = [], serializer = null) ->
@@ -35,10 +36,13 @@ class Query
     return
 
 
-  prepare: (cr) ->
-    fbq = cr
-    for statement in @.q
-      fbq = (ops[statement[0]] fbq, @.serializer, ...statement[1..])
+  prepare: (col_ref, serializer = null) ->
+    s = serializer ? @.serializer
+    fbq = col_ref
+    (each @.q, (statement) ->
+      fbq = (ops[statement[0]] fbq, s, ...statement[1..])
+      return
+    )
     return fbq
 
 

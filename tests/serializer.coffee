@@ -1,10 +1,10 @@
 ma = require 'module-alias'
-(ma.addAlias '@', __dirname + '../../')
+(ma.addAlias '@flame-odm', __dirname + '../../')
 
 chai   = require 'chai'
 assert = chai.assert
 
-Serializer = require '@/lib/serializer'
+Serializer = require '@flame-odm/lib/serializer'
 
 _ = require 'lodash'
 

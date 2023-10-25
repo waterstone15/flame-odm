@@ -1,10 +1,10 @@
 ma = require 'module-alias'
-(ma.addAlias '@', __dirname + '../../')
+(ma.addAlias '@flame-odm', __dirname + '../../')
 
 chai   = require 'chai'
 assert = chai.assert
 
-Validator = require '@/lib/validator'
+Validator = require '@flame-odm/lib/validator'
 
 _ = require 'lodash'
 

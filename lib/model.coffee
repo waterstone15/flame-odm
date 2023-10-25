@@ -1,7 +1,6 @@
 any           = require 'lodash/some'
 each          = require 'lodash/each'
 find          = require 'lodash/find'
-FlameError    = require '@/lib/flame-error'
 get           = require 'lodash/get'
 isEmpty       = require 'lodash/isEmpty'
 isFunction    = require 'lodash/isFunction'
@@ -11,13 +10,14 @@ keys          = require 'lodash/keys'
 matches       = require 'lodash/matches'
 merge         = require 'lodash/merge'
 set           = require 'lodash/set'
-{ flatPaths } = require '@/lib/helpers'
 
-Access        = require '@/lib/access'
-Adapter       = require '@/lib/adapter'
-Record        = require '@/lib/record'
-Serializer    = require '@/lib/serializer'
-Validator     = require '@/lib/validator'
+Access        = require './access'
+Adapter       = require './adapter'
+FlameError    = require './flame-error'
+Record        = require './record'
+Serializer    = require './serializer'
+Validator     = require './validator'
+{ flatPaths } = require './helpers'
 
 
 class Model
@@ -95,10 +95,10 @@ class Model
     return (new Record @.type, null, vs, ac, ad, cf, se, va)
 
 
-  shadow: (id, values = {}, rs...) ->
+  fragment: (id, values = {}, rs...) ->
 
     if !(isString id) || !(isPlainObject values)
-      e = "A Model shadow must be created with an id and a values object as the
+      e = "A Model fragment must be created with an id and a values object as the
       first and second arguments."
       throw (new FlameError e)
       return
@@ -120,26 +120,27 @@ class Model
   del: ->
 
 
-  find: (query) ->
-    return await (@.adapter.find @, query, transaction)
+  find: (query, fields = null, transaction = null) ->
+    return await (@.adapter.find @, query, fields, transaction)
 
 
   get: (id, fields = null, transaction = null) ->
     return await (@.adapter.get @, id, fields, transaction)
 
 
-  getAll: (ids, fields = null) ->
+  getAll: (ids = [], fields = null) ->
     return await (@.adapter.getAll @, ids, fields)
 
 
-  list: (query, fields = null, transaction = null) ->
-    return await (@.adapter.list @, query, fields, transaction)
+  findAll: (query, fields = null, transaction = null) ->
+    return await (@.adapter.findAll @, query, fields, transaction)
 
 
-  page: ->
+  page: (pager)->
+    return await (@.adapter.page @, pager)
 
 
-  walk: ->
+  traverse: ->
 
 
 module.exports = Model

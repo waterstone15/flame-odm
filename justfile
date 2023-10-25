@@ -4,6 +4,7 @@ default:
 
 [private]
 buid-coffee:
+  rm -rf ./build
   yarn coffee --compile --no-header --output ./build ./lib
 
 build: buid-coffee
