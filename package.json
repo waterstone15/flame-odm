@@ -6,8 +6,8 @@
     "build": "run-s build:clean build:coffee",
     "build:clean": "rm -rf ./build",
     "build:coffee": "./node_modules/coffeescript/bin/coffee --compile --no-header --output ./build ./lib",
-    "bump:version": "yarn bump --tag",
-    "publish": "npm publish",
+    "bump:tag": "yarn bump --tag",
+    "npm:publish": "npm publish",
     "test": "yarn mocha --parallel --require coffeescript/register --reporter list ./tests/**/*.coffee"
   },
   "keywords": [
