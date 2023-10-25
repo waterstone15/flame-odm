@@ -1,6 +1,6 @@
 {
   "name": "flame-odm",
-  "version": "0.0.4-beta.3",
+  "version": "0.0.4-beta.4",
   "description": "Data model and query library for Firestore.",
   "scripts": {
     "just": "just"
@@ -69,7 +69,6 @@
     "@jsdevtools/version-bump-prompt": "^6.1.0",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
-    "dotenv": "^16.1.4",
     "mocha": "^10.2.0",
     "module-alias": "^2.2.3"
   }
