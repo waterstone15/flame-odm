@@ -1,12 +1,12 @@
 {
   "name": "flame-odm",
-  "version": "0.0.4-beta.5",
+  "version": "0.0.4-beta.6",
   "description": "Data model and query library for Firestore.",
   "scripts": {
     "build": "run-s build:clean build:coffee",
     "build:clean": "rm -rf ./build",
     "build:coffee": "./node_modules/coffeescript/bin/coffee --compile --no-header --output ./build ./lib",
-    "bump": "yarn bump --tag",
+    "bump:version": "yarn bump --tag",
     "publish": "npm publish",
     "test": "yarn mocha --parallel --require coffeescript/register --reporter list ./tests/**/*.coffee"
   },
