@@ -1,6 +1,3 @@
-de = require 'dotenv'
-de.config({  path: '.env' })
-
 ma = require 'module-alias'
 (ma.addAlias '@flame-odm', __dirname + '../../')
 

@@ -50,7 +50,10 @@
       "require": "./build/validator.js"
     }
   },
-  "repository": "git@github.com:waterstone15/flame-odm.git",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/waterstone15/flame-odm.git"
+  },
   "author": "Brian Waterstone <code@waterstone15.com>",
   "license": "MIT",
   "private": false,
