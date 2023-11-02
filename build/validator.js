@@ -71,7 +71,7 @@
             throw new FlameError(e);
             return;
           }
-          if (!(this.v[_k](get(obj, _k)))) {
+          if (!(this.v[_k](get(obj, _k), obj))) {
             (errs[_k] = true);
           }
         }));
@@ -99,7 +99,7 @@
             throw new FlameError(e);
             return;
           }
-          return this.v[_k](get(obj, _k));
+          return this.v[_k](get(obj, _k), obj);
         }));
       }
 

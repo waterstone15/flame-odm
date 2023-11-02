@@ -63,7 +63,7 @@ class Validator
           function.\n Field: #{_k}"
         throw (new FlameError e)
         return
-      (errs[_k] = true) if !(@.v[_k](get obj, _k))
+      (errs[_k] = true) if !(@.v[_k]((get obj, _k), obj))
       return
     ))
     return errs
@@ -90,8 +90,8 @@ class Validator
           Field: #{_k}"
         throw (new FlameError e)
         return
-      return @.v[_k](get obj, _k))
-    )
+      return @.v[_k]((get obj, _k), obj)
+    ))
 
 
 module.exports = Validator
