@@ -61,7 +61,7 @@ class Validator
       throw (new FlameError e)
       return
 
-    return (new @.constructor (merge @.v, v))
+    return (new @.constructor (merge {}, @.v, v))
 
   
   errors: (obj, fields) ->
