@@ -44,7 +44,6 @@ class Validator
 
 
   extend: (v) ->
-    console.log 'yay'
     (v = (flatPaths v)) if (isEmpty (functions v))
 
     if !(isPlainObject v)
