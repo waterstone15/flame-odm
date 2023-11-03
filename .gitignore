@@ -5,6 +5,8 @@
 count.sh
 
 ### Flame  ###
+/build
+/build/*
 # /builds
 # /build
 
@@ -16,7 +18,6 @@ count.sh
 # compiled output
 /dist
 /tmp
-/build
 
 # dependencies
 /node_modules
