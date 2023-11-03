@@ -12,7 +12,7 @@
     "test": "yarn mocha --parallel --require coffeescript/register --reporter list ./tests/**/*.coffee"
   },
   "files": [
-    "/build**"
+    "./build/**.js"
   ],
   "keywords": [
     "data",
