@@ -1,6 +1,6 @@
 {
   "name": "flame-odm",
-  "version": "0.0.4-beta.17",
+  "version": "0.0.4-beta.18",
   "description": "Data model and query library for Firestore.",
   "scripts": {
     "prepack": "yarn build",
