@@ -72,7 +72,7 @@ class Adapter
     await @.connect()
     dr = (@.db.doc "#{model.collection}/#{id}")
     if transaction
-      ds = await transaction.get()
+      ds = await (transaction.get dr)
       if ds.exists
         obj = (model.serializer.fromDB ds.data())
         return if fields then (pick obj, fields) else obj
