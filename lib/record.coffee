@@ -74,13 +74,18 @@ class Record
     return (@.validator.errors @.data, fields)
 
 
+  destroy: (transaction = null) ->
+    return await (@.adapter.destroy @, transaction)
+
+
   save: (transaction = null) ->
     return await (@.adapter.save @, transaction)
 
 
   update: (fields = [], transaction = null) ->
-    fs = (uniq (union [], fields, (compact [ (get @, 'config.opts.updated_at_field') ])))
-    return await (@.adapter.update @, fs, transaction)
+    _fields = (uniq (union [], fields, (compact [ (get @, 'config.opts.updated_at_field') ])))
+    return await (@.adapter.update @, _fields, transaction)
+
 
 
 module.exports = Record

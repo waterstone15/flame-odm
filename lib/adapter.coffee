@@ -62,6 +62,20 @@ class Adapter
     await @.connect()
 
 
+  destroy: (record, transaction = null) ->
+    await @.connect()
+    dr = (@.db.doc "#{record.collection}/#{record.id}")
+    if transaction
+      await (transaction.delete dr)
+    else
+      try
+        await dr.delete()
+      catch err
+        console.log err
+        return false
+    return true
+
+
   find: (model, query, fields = null, transaction = null) ->
     await @.connect()
     ls = await (@.findAll model, query, fields, transaction)
@@ -155,6 +169,10 @@ class Adapter
       return null
 
 
+  traverse: (model, query, opts, fn) ->
+    await @.connect()
+
+
   update: (record, fields = [], transaction = null) ->
     await @.connect()
     dr = (@.db.doc "#{record.collection}/#{record.id}")
@@ -169,8 +187,6 @@ class Adapter
     return true
 
 
-  traverse: (model, query, opts, fn) ->
-    await @.connect()
 
 
 module.exports = Adapter
