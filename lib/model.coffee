@@ -136,8 +136,8 @@ class Model
     return await (@.adapter.findAll @, query, fields, transaction)
 
 
-  page: (pager)->
-    return await (@.adapter.page @, pager)
+  page: (pager, cursor = null, fields = null, transaction = null)->
+    return await (@.adapter.page @, pager, cursor, fields, transaction)
 
 
   traverse: ->

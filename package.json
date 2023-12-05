@@ -9,7 +9,8 @@
     "build:coffee": "./node_modules/coffeescript/bin/coffee --compile --no-header --output ./build ./lib",
     "bump:tag": "yarn bump --tag",
     "npm:publish": "npm publish",
-    "test": "yarn mocha --parallel --require coffeescript/register --reporter list ./tests/**/*.coffee"
+    "test": "yarn mocha --parallel --require coffeescript/register --reporter list ./tests/**/*.coffee",
+    "test:watch": "yarn chokidar \"./**/*.coffee\" -c \"yarn mocha --slow 700 --parallel --require coffeescript/register --reporter list ./tests/pager.coffee\""
   },
   "files": [
     "./build/**.js"
@@ -42,9 +43,17 @@
       "import": "./build/config.js",
       "require": "./build/config.js"
     },
+    "./helpers": {
+      "import": "./build/helpers.js",
+      "require": "./build/helpers.js"
+    },
     "./model": {
       "import": "./build/model.js",
       "require": "./build/model.js"
+    },
+    "./pager": {
+      "import": "./build/pager.js",
+      "require": "./build/pager.js"
     },
     "./query": {
       "import": "./build/query.js",
@@ -81,6 +90,7 @@
     "@jsdevtools/version-bump-prompt": "^6.1.0",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
+    "chokidar-cli": "^3.0.0",
     "dotenv": "^16.3.1",
     "mocha": "^10.2.0",
     "module-alias": "^2.2.3"

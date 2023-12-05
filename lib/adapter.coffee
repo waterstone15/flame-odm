@@ -2,11 +2,18 @@ FBA_APP       = require 'firebase-admin/app'
 FBA_FIRESTORE = require 'firebase-admin/firestore'
 
 first         = require 'lodash/first'
+get           = require 'lodash/get'
 isEmpty       = require 'lodash/isEmpty'
+isEqual       = require 'lodash/isEqual'
 isFunction    = require 'lodash/isFunction'
 isInteger     = require 'lodash/isInteger'
+last          = require 'lodash/last'
 map           = require 'lodash/map'
+max           = require 'lodash/max'
+min           = require 'lodash/min'
 pick          = require 'lodash/pick'
+reverse       = require 'lodash/reverse'
+{ all }       = require 'rsvp'
 
 class Adapter
 
@@ -139,11 +146,59 @@ class Adapter
       return null
 
 
-  page: (model, pager, cursor) ->
-    # direction = 'high-to-low' || 'low-to-high'
-    position = 'page-start' || 'page-end'
-    values = [[ 'field', 'value' ], [ 'field', 'value' ]]
+  page: (model, pager = null, cursor = null, fields = null, transaction = null) ->
+    CPEND = (get cursor, 'position') == 'page-end'
+
     await @.connect()
+    queries = (pager.queries cursor)
+    [ coll_first, coll_last, itemz, priorz, total, tail_count ] = await (all [
+      (@.find    model, queries.collection, fields, transaction)
+      (@.find    model, queries.reversed,   fields, transaction)
+      (@.findAll model, queries.itemz,      fields, transaction)
+      (@.findAll model, queries.priorz,     fields, transaction)
+      (@.count model, queries.collection)
+      (@.count model, queries.tail)
+    ])
+
+    pg_count = (min [ pager.size, itemz.length ])
+    items    = itemz[0...pg_count]
+
+    if CPEND
+      items = (reverse items)
+      [ coll_first, coll_last ] = [ coll_last, coll_first ]
+
+    at_start = (isEqual coll_first, (first items))
+    at_end   = (isEqual coll_last, (last items))
+
+    previous = ({ obj: priorz[1], position: 'page-end' } if !at_start) ? null
+    next     = ({ obj: itemz[pg_count], position: 'page-start' } if !at_end) ? null
+
+    after  = tail_count - pg_count
+    before = (total - tail_count)
+
+    if CPEND
+      [ after, before ] = [ before, after ]
+      previous = ({ obj: itemz[pg_count], position: 'page-end' } if !at_start) ? null
+      next     = ({ obj: priorz[1], position: 'page-start' } if !at_end) ? null
+
+    return {
+      counts:
+        total:    total
+        before:   before
+        page:     pg_count
+        after:    after
+      collection:
+        first:    coll_first
+        last:     coll_last
+      page:
+        first:    (first items)
+        items:    items
+        last:     (last items)
+      cursors:
+        previous: previous
+        current:  cursor
+        next:     next
+    }
 
 
   save: (record, transaction = null) ->
