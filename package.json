@@ -14,7 +14,9 @@
     "test:watch": "yarn chokidar \"./**/*.coffee\" -c \"yarn mocha --slow 700 --parallel --require coffeescript/register --reporter list ./tests/pager.coffee\""
   },
   "files": [
-    "./build/**.js"
+    "./lib/**/*",
+    "./test-helpers/**/*",
+    "./tests/**/*"
   ],
   "keywords": [
     "access",
