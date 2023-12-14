@@ -36,11 +36,11 @@ class Model
     @.type       = type
     @.defaults   = defaults
 
-    @.access     = (find rs, (matches { type: 'Access' }))        ? null
-    @.adapter    = (find rs, (matches { type: 'Adapter' }))       ? (new Adapter())
-    @.config     = (find rs, (matches { type: 'Config' }))        ? null
-    @.serializer = (find rs, (matches { type: 'Serializer' }))    ? (new Serializer())
-    @.validator  = (find rs, (matches { type: 'Validator' }))     ? null
+    @.access     = (find rs, (matches { type: 'Access' }))     ? null
+    @.adapter    = (find rs, (matches { type: 'Adapter' }))    ? (new Adapter())
+    @.config     = (find rs, (matches { type: 'Config' }))     ? null
+    @.serializer = (find rs, (matches { type: 'Serializer' })) ? (new Serializer())
+    @.validator  = (find rs, (matches { type: 'Validator' }))  ? null
     @.data       = @.obj()
 
     cf = (get @, 'config.opts.collection_field')
@@ -68,11 +68,11 @@ class Model
 
     df = (merge {}, @.defaults, defaults)
 
-    ac = (find rs, (matches { type: 'Access' }))        ? @.access
-    ad = (find rs, (matches { type: 'Adapter' }))       ? @.adapter
-    cf = (find rs, (matches { type: 'Config' }))        ? @.config
-    se = (find rs, (matches { type: 'Serializer' }))    ? @.serializer
-    va = (find rs, (matches { type: 'Validator' }))     ? @.validator
+    ac = (find rs, (matches { type: 'Access' }))     ? @.access
+    ad = (find rs, (matches { type: 'Adapter' }))    ? @.adapter
+    cf = (find rs, (matches { type: 'Config' }))     ? @.config
+    se = (find rs, (matches { type: 'Serializer' })) ? @.serializer
+    va = (find rs, (matches { type: 'Validator' }))  ? @.validator
 
     return (new @.constructor type, df, ac, ad, cf, se, va)
 
@@ -86,11 +86,11 @@ class Model
       return
 
     vs = (merge {}, @.defaults, values)
-    ac = (find rs, (matches { type: 'Access' }))        ? @.access
-    ad = (find rs, (matches { type: 'Adapter' }))       ? @.adapter
-    cf = (find rs, (matches { type: 'Config' }))        ? @.config
-    se = (find rs, (matches { type: 'Serializer' }))    ? @.serializer
-    va = (find rs, (matches { type: 'Validator' }))     ? @.validator
+    ac = (find rs, (matches { type: 'Access' }))     ? @.access
+    ad = (find rs, (matches { type: 'Adapter' }))    ? @.adapter
+    cf = (find rs, (matches { type: 'Config' }))     ? @.config
+    se = (find rs, (matches { type: 'Serializer' })) ? @.serializer
+    va = (find rs, (matches { type: 'Validator' }))  ? @.validator
 
     return (new Record @.type, null, vs, ac, ad, cf, se, va)
 
@@ -104,20 +104,17 @@ class Model
       return
 
     vs = (merge {}, @.defaults, values)
-    ac = (find rs, (matches { type: 'Access' }))        ? @.access
-    ad = (find rs, (matches { type: 'Adapter' }))       ? @.adapter
-    cf = (find rs, (matches { type: 'Config' }))        ? @.config
-    se = (find rs, (matches { type: 'Serializer' }))    ? @.serializer
-    va = (find rs, (matches { type: 'Validator' }))     ? @.validator
+    ac = (find rs, (matches { type: 'Access' }))     ? @.access
+    ad = (find rs, (matches { type: 'Adapter' }))    ? @.adapter
+    cf = (find rs, (matches { type: 'Config' }))     ? @.config
+    se = (find rs, (matches { type: 'Serializer' })) ? @.serializer
+    va = (find rs, (matches { type: 'Validator' }))  ? @.validator
 
     return (new Record @.type, id, vs, ac, ad, cf, se, va)
 
 
   count: (query) ->
     return await (@.adapter.count @, query)
-
-
-  del: ->
 
 
   find: (query, fields = null, transaction = null) ->
@@ -138,9 +135,6 @@ class Model
 
   page: (pager, cursor = null, fields = null, transaction = null)->
     return await (@.adapter.page @, pager, cursor, fields, transaction)
-
-
-  traverse: ->
 
 
 module.exports = Model

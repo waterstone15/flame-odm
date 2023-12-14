@@ -7,6 +7,7 @@ chai   = require 'chai'
 assert = chai.assert
 
 _            = require 'lodash'
+Adapter      = require '@flame-odm/lib/adapter'
 Config       = require '@flame-odm/lib/config'
 Model        = require '@flame-odm/lib/model'
 Pager        = require '@flame-odm/lib/pager'
@@ -18,6 +19,8 @@ util         = require 'node:util'
 { all }      = require 'rsvp'
 { DateTime } = require 'luxon'
 
+
+a = (new Adapter 'process-env')
 
 s = (new Serializer { prefixes: []})
 
@@ -36,7 +39,7 @@ m = (new Model 'Alpha', {
   id:         -> (random.randomString 36)
   updated_at: -> DateTime.local().setZone('utc').toISO()
   letter:     -> null
-}, c, s)
+}, a, c, s,)
 
 
 

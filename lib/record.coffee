@@ -39,11 +39,11 @@ class Record
     @.type       = type
     @.values     = values
 
-    @.access     = (find rs, (matches { type: 'Access' }))        ? null
-    @.adapter    = (find rs, (matches { type: 'Adapter' }))       ? (new Adapter())
-    @.config     = (find rs, (matches { type: 'Config' }))        ? null
-    @.serializer = (find rs, (matches { type: 'Serializer' }))    ? (new Serializer())
-    @.validator  = (find rs, (matches { type: 'Validator' }))     ? (new Validator())
+    @.access     = (find rs, (matches { type: 'Access' }))     ? null
+    @.adapter    = (find rs, (matches { type: 'Adapter' }))    ? (new Adapter())
+    @.config     = (find rs, (matches { type: 'Config' }))     ? null
+    @.serializer = (find rs, (matches { type: 'Serializer' })) ? (new Serializer())
+    @.validator  = (find rs, (matches { type: 'Validator' }))  ? (new Validator())
     @.data       = @.obj()
 
     cf  = (get @, 'config.opts.collection_field')

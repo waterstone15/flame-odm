@@ -7,6 +7,8 @@ isEmpty       = require 'lodash/isEmpty'
 isEqual       = require 'lodash/isEqual'
 isFunction    = require 'lodash/isFunction'
 isInteger     = require 'lodash/isInteger'
+isPlainObject = require 'lodash/isPlainObject'
+isString      = require 'lodash/isString'
 last          = require 'lodash/last'
 map           = require 'lodash/map'
 max           = require 'lodash/max'
@@ -15,6 +17,7 @@ pick          = require 'lodash/pick'
 reverse       = require 'lodash/reverse'
 { all }       = require 'rsvp'
 
+
 class Adapter
 
 
@@ -22,7 +25,16 @@ class Adapter
 
 
   constructor: (sa) ->
-    @.cfg = { sa }
+    @.cfg = if (isString sa) then {} else { sa }
+
+    @.cloud = switch
+      when (isPlainObject sa)          then 'other'
+      when (sa == 'firebase-function') then 'firebase-function'
+      when (sa == 'google-cloud')      then 'google-cloud'
+      when (sa == 'process-env')       then 'process-env'
+      else
+        'firebase-function'
+
     return
 
 
@@ -30,25 +42,51 @@ class Adapter
     if @.fba && @.db
       return
 
-    if !@.cfg.sa
-      sa = (JSON.parse process.env.SERVICE_ACCOUNT)
-    else if (isFunction @.cfg.sa)
-      sa = await @.cfg.sa()
-    else
-      throw (new FlameError 'An adapter needs a service account in order to connect to Firestore.')
+    if @.cloud == 'firebase-function'
+      try
+        FBA_APP.initializeApp()
+        @.fba = FBA_APP.getApp()
+        @.db  = FBA_FIRESTORE.getFirestore(@.fba)
+      catch e
+        throw (new FlameError "There was an error connecting to Firebase. Ref: 'firebase-function'")
+        console.log e
       return
 
-    try
-      (FBA_APP.initializeApp {
-        credential: (FBA_APP.cert sa)
-        databaseURL: "https://#{sa.project_id}.firebaseio.com"
-      }, 'flame-odm')
-    catch e
-      (do ->)
 
-    @.fba = (FBA_APP.getApp 'flame-odm')
-    @.db  = (FBA_FIRESTORE.getFirestore @.fba)
-    return
+    if @.cloud == 'google-cloud'
+      try
+        (FBA_APP.initializeApp {
+          credential: FBA_APP.applicationDefault()
+        })
+        @.fba = FBA_APP.getApp()
+        @.db  = (FBA_FIRESTORE.getFirestore @.fba)
+      catch e
+        throw (new FlameError "There was an error connecting to Firebase. Ref: 'google-cloud'")
+        console.log e
+      return
+
+
+    if @.cloud == 'other' || @.cloud == 'process-env'
+      if !@.cfg.sa
+        sa = (JSON.parse process.env.FB_SERVICE_ACCOUNT)
+      else if (isFunction @.cfg.sa)
+        sa = await @.cfg.sa()
+      else
+        throw (new FlameError 'When not running in a Firebase Function or on Google Cloud, an adapter needs a service account in order to connect to Firestore. Please supply a valid service account.')
+        return
+
+      try
+        (FBA_APP.initializeApp {
+          credential: (FBA_APP.cert sa)
+          databaseURL: "https://#{sa.project_id}.firebaseio.com"
+        }, 'flame-odm')
+        @.fba = (FBA_APP.getApp 'flame-odm')
+        @.db  = (FBA_FIRESTORE.getFirestore @.fba)
+      catch e
+        throw (new FlameError "There was an error connecting to Firebase. Ref: 'other'")
+        console.log e
+      return
+
 
 
   count: (model, query) ->

@@ -2,6 +2,7 @@
   "name": "flame-odm",
   "version": "0.0.4-beta.18",
   "description": "Data model and query library for Firestore.",
+  "homepage": "https://flame-odm.com",
   "scripts": {
     "prepack": "yarn build",
     "build": "run-s build:clean build:coffee",
@@ -16,14 +17,19 @@
     "./build/**.js"
   ],
   "keywords": [
+    "access",
+    "acl",
     "data",
     "database",
     "firebase",
     "firestore",
+    "flame",
     "model",
     "odm",
     "orm",
     "query",
+    "roles",
+    "serialization",
     "validation"
   ],
   "exports": {

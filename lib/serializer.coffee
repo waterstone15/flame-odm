@@ -22,13 +22,13 @@ class Serializer
   type: 'Serializer'
 
 
-  constructor: (opt = {}) ->
-    @.prefixes         = if (isArray opt.prefixes)            then opt.prefixes         else null
-    @.separator        = if (isString opt.separator)          then opt.separator        else '-'
+  constructor: (opts = {}) ->
+    @.prefixes  = if (isArray opts.prefixes)   then opts.prefixes  else null
+    @.separator = if (isString opts.separator) then opts.separator else '-'
     @.fmts =
       field:
-        db:    (get opt, 'fmt.db.field')  ? 'kebab'
-        plain: (get opt, 'fmt.obj.field') ? 'snake'
+        db:    (get opts, 'fmt.db.field')  ? 'kebab'
+        plain: (get opts, 'fmt.obj.field') ? 'snake'
     return
 
 
