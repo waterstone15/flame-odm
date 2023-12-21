@@ -1,6 +1,6 @@
 {
   "name": "flame-odm",
-  "version": "0.5.0-beta.1",
+  "version": "0.5.0",
   "description": "Data model and query library for Firestore.",
   "homepage": "https://flame-odm.com",
   "scripts": {
