@@ -28,6 +28,7 @@ class Adapter
     @.cfg = if (isString sa) then {} else { sa }
 
     @.cloud = switch
+      when (isFunction sa)             then 'other'
       when (isPlainObject sa)          then 'other'
       when (sa == 'firebase-function') then 'firebase-function'
       when (sa == 'google-cloud')      then 'google-cloud'
