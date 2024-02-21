@@ -137,4 +137,8 @@ class Model
     return await (@.adapter.page @, pager, cursor, fields, transaction)
 
 
+  traverse: (pager, fn, fields = null)->
+    return await (@.adapter.traverse @, pager, fn, fields)
+
+
 module.exports = Model

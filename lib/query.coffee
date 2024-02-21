@@ -1,6 +1,4 @@
-map        = require 'lodash/map'
 each       = require 'lodash/each'
-
 Serializer = require './serializer'
 
 
@@ -9,21 +7,22 @@ class Query
 
   type: 'Query'
 
-  # firestore query (fbq), serializer (s), fields (f), values (v)
+
+  # fbq = firestore query, s = serializer, fs = fields, v(s) = value(s)
   ops =
-    'eq':            (fbq, s, f, v) -> (fbq.where (s.fmt[s.fmts.field.db] f), '==', v)
-    'eq-any':       (fbq, s, f, vs) -> (fbq.where (s.fmt[s.fmts.field.db] f), 'in', vs)
-    'gt':            (fbq, s, f, v) -> (fbq.where (s.fmt[s.fmts.field.db] f), '>', v)
-    'gte':           (fbq, s, f, v) -> (fbq.where (s.fmt[s.fmts.field.db] f), '>=', v)
-    'includes':      (fbq, s, f, v) -> (fbq.where (s.fmt[s.fmts.field.db] f), 'array-contains', v)
-    'includes-any': (fbq, s, f, vs) -> (fbq.where (s.fmt[s.fmts.field.db] f), 'array-contains-any', vs)
-    'limit':            (fbq, _, n) -> (fbq.limit n)
-    'lt':            (fbq, s, f, v) -> (fbq.where (s.fmt[s.fmts.field.db] f), '<', v)
-    'lte':           (fbq, s, f, v) -> (fbq.where (s.fmt[s.fmts.field.db] f), '<=', v)
-    'not-eq':        (fbq, s, f, v) -> (fbq.where (s.fmt[s.fmts.field.db] f), '!=', v)
-    'not-eq-any':   (fbq, s, f, vs) -> (fbq.where (s.fmt[s.fmts.field.db] f), 'not-in', vs)
-    'order-by':      (fbq, s, f, d) -> (fbq.orderBy (s.fmt[s.fmts.field.db] f), (d ? 'asc'))
-    'start-at':         (fbq, _, v) -> (fbq.startAt v...)
+    'eq':            (fbq, s, fs, v) -> (fbq.where (s.fmt[s.fmts.field.db] fs), '==', v)
+    'eq-any':       (fbq, s, fs, vs) -> (fbq.where (s.fmt[s.fmts.field.db] fs), 'in', vs)
+    'gt':            (fbq, s, fs, v) -> (fbq.where (s.fmt[s.fmts.field.db] fs), '>', v)
+    'gte':           (fbq, s, fs, v) -> (fbq.where (s.fmt[s.fmts.field.db] fs), '>=', v)
+    'includes':      (fbq, s, fs, v) -> (fbq.where (s.fmt[s.fmts.field.db] fs), 'array-contains', v)
+    'includes-any': (fbq, s, fs, vs) -> (fbq.where (s.fmt[s.fmts.field.db] fs), 'array-contains-any', vs)
+    'limit':             (fbq, _, n) -> (fbq.limit n)
+    'lt':            (fbq, s, fs, v) -> (fbq.where (s.fmt[s.fmts.field.db] fs), '<', v)
+    'lte':           (fbq, s, fs, v) -> (fbq.where (s.fmt[s.fmts.field.db] fs), '<=', v)
+    'not-eq':        (fbq, s, fs, v) -> (fbq.where (s.fmt[s.fmts.field.db] fs), '!=', v)
+    'not-eq-any':   (fbq, s, fs, vs) -> (fbq.where (s.fmt[s.fmts.field.db] fs), 'not-in', vs)
+    'order-by':      (fbq, s, fs, d) -> (fbq.orderBy (s.fmt[s.fmts.field.db] fs), (d ? 'asc'))
+    'start-at':         (fbq, _, v)  -> (fbq.startAt v...)
 
 
   constructor: (q = [], serializer = null) ->
@@ -40,8 +39,6 @@ class Query
       return
     )
     return fbq
-
-
 
 
 module.exports = Query

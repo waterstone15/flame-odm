@@ -3,6 +3,7 @@ FBA_FIRESTORE = require 'firebase-admin/firestore'
 { getAuth }   = require 'firebase-admin/auth'
 
 first         = require 'lodash/first'
+FlameError    = require './flame-error'
 get           = require 'lodash/get'
 isEmpty       = require 'lodash/isEmpty'
 isEqual       = require 'lodash/isEqual'
@@ -25,8 +26,9 @@ class Adapter
   type: 'Adapter'
 
 
-  constructor: (sa) ->
-    @.cfg = if (isString sa) then {} else { sa }
+  constructor: (sa = null, name = 'flame-odm') ->
+    @.cfg  = if (isString sa) then {} else { sa }
+    @.name = name
 
     @.cloud = switch
       when (isFunction sa)             then 'other'
@@ -34,67 +36,76 @@ class Adapter
       when (sa == 'firebase-function') then 'firebase-function'
       when (sa == 'google-cloud')      then 'google-cloud'
       when (sa == 'process-env')       then 'process-env'
-      else
+      when (sa == null)                then 'firebase-function'
+      when (isString sa)
+        @.name = sa
         'firebase-function'
+      else
+        throw (new FlameError "Invalid arguments passed to `new Adatper()`.")
 
     return
 
-
+  connecting: null
   connect: ->
-    if !(isEmpty @.fba) && !(isEmpty @.db)
+    if @.connecting != null
+      await @.connecting
       return
 
-    if @.cloud == 'firebase-function'
-      try
-        FBA_APP.initializeApp()
-        @.fba  = FBA_APP.getApp()
-        @.db   = FBA_FIRESTORE.getFirestore(@.fba)
-        @.auth = (getAuth @.fba)
-      catch e
-        throw (new FlameError "There was an error connecting to Firebase. Ref: 'firebase-function'")
-        console.log e
-      return
+    @.connecting = (do =>
+      if !(isEmpty @.fba) && !(isEmpty @.db)
+        return
+
+      if @.cloud == 'firebase-function'
+        try
+          FBA_APP.initializeApp()
+          @.fba  = FBA_APP.getApp()
+          @.db   = FBA_FIRESTORE.getFirestore(@.fba)
+          @.auth = (getAuth @.fba)
+        catch e
+          throw (new FlameError "There was an error connecting to Firebase. Ref: 'firebase-function'")
+          console.log e
+        return
 
 
-    if @.cloud == 'google-cloud'
-      try
-        (FBA_APP.initializeApp {
-          credential: FBA_APP.applicationDefault()
-        })
-        @.fba  = FBA_APP.getApp()
-        @.db   = (FBA_FIRESTORE.getFirestore @.fba)
-        @.auth = (getAuth @.fba)
-      catch e
-        throw (new FlameError "There was an error connecting to Firebase. Ref: 'google-cloud'")
-        console.log e
-      return
+      if @.cloud == 'google-cloud'
+        try
+          (FBA_APP.initializeApp { credential: FBA_APP.applicationDefault() })
+          @.fba  = FBA_APP.getApp()
+          @.db   = (FBA_FIRESTORE.getFirestore @.fba)
+          @.auth = (getAuth @.fba)
+        catch e
+          throw (new FlameError "There was an error connecting to Firebase. Ref: 'google-cloud'")
+          console.log e
+        return
 
 
-    if @.cloud == 'process-env'
-      try
-        sa = (JSON.parse process.env.FB_SERVICE_ACCOUNT)
-        (FBA_APP.initializeApp { credential: (FBA_APP.cert sa) }, 'flame-odm')
-        @.fba  = (FBA_APP.getApp 'flame-odm')
-        @.db   = (FBA_FIRESTORE.getFirestore @.fba)
-        @.auth = (getAuth @.fba)
-      catch e
-        throw (new FlameError "There was an error connecting to Firebase. Ref: 'other'")
-        console.log e
-      return
+      if @.cloud == 'process-env'
+        try
+          sa = (JSON.parse process.env.FB_SERVICE_ACCOUNT)
+          (FBA_APP.initializeApp { credential: (FBA_APP.cert sa) }, @.name)
+          @.fba  = (FBA_APP.getApp @.name)
+          @.db   = (FBA_FIRESTORE.getFirestore @.fba)
+          @.auth = (getAuth @.fba)
+        catch e
+          throw (new FlameError "There was an error connecting to Firebase. Ref: 'other'")
+          console.log e
+        return
 
 
-    if @.cloud == 'other'
-      try
-        sa = @.cfg.sa
-        sa = await sa() if (isFunction sa)
-        (FBA_APP.initializeApp { credential: (FBA_APP.cert sa) }, 'flame-odm')
-        @.fba  = (FBA_APP.getApp 'flame-odm')
-        @.db   = (FBA_FIRESTORE.getFirestore @.fba)
-        @.auth = (getAuth @.fba)
-      catch e
-        throw (new FlameError "There was an error connecting to Firebase. Ref: 'other'")
-        console.log e
-      return
+      if @.cloud == 'other'
+        try
+          sa = @.cfg.sa
+          sa = await sa() if (isFunction sa)
+          (FBA_APP.initializeApp { credential: (FBA_APP.cert sa) }, @.name)
+          @.fba  = (FBA_APP.getApp @.name)
+          @.db   = (FBA_FIRESTORE.getFirestore @.fba)
+          @.auth = (getAuth @.fba)
+        catch e
+          throw (new FlameError "There was an error connecting to Firebase. Ref: 'other'")
+          console.log e
+        return
+    )
+    await @.connecting
 
 
 
@@ -177,6 +188,8 @@ class Adapter
       s = model.serializer
       fs = (map fields, (f) -> (s.fmt[s.fmts.field.db] f))
       fbq = (fbq.select fs...)
+    if fields == []
+      fbq = (fbq.select())
     if transaction
       qs = await (transaction.get fbq)
       if !qs.empty
@@ -193,7 +206,7 @@ class Adapter
       return null
 
 
-  page: (model, pager = null, cursor = null, fields = null, transaction = null) ->
+  page: (model, pager = null, cursor = null, fields = null, transaction = null, counts = true) ->
     CPEND = (get cursor, 'position') == 'page-end'
 
     await @.connect()
@@ -203,8 +216,8 @@ class Adapter
       (@.find    model, queries.reversed,   fields, transaction)
       (@.findAll model, queries.itemz,      fields, transaction)
       (@.findAll model, queries.priorz,     fields, transaction)
-      (@.count model, queries.collection)
-      (@.count model, queries.tail)
+      (if counts then (@.count model, queries.collection) else 0)
+      (if counts then (@.count model, queries.tail) else 0)
     ])
 
     pg_count = (min [ pager.size, itemz.length ])
@@ -230,10 +243,10 @@ class Adapter
 
     return {
       counts:
-        total:    total
-        before:   before
-        page:     pg_count
-        after:    after
+        total:    if counts then total    else null
+        before:   if counts then before   else null
+        page:     if counts then pg_count else null
+        after:    if counts then after    else null
       collection:
         first:    coll_first
         last:     coll_last
@@ -271,8 +284,17 @@ class Adapter
       return null
 
 
-  traverse: (model, query, opts, fn) ->
-    await @.connect()
+  traverse: (model, pager = null, fn, fields = null) ->
+    cursor = null
+    pg     = null
+
+    while (!pg || cursor)
+      pg     = await (@.page model, pager, cursor, fields, null, false)
+      items  = (get pg, 'page.items', [])
+      cursor = (get pg, 'cursors.next')
+      await (all (map items, ((r) -> await (fn r))))
+
+    return
 
 
   update: (record, fields = [], transaction = null) ->

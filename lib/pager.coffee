@@ -37,7 +37,7 @@ class Pager
 
   constructor: (q = [], opts = {}) ->
     if !(reduce q, ((out, constraint) -> (out && (includes allowed, constraint[0]))), true)
-      e = "The first argument to a Pager may only use the following constraings: #{(join allowed, ', ')}."
+      e = "The first argument to a Pager may only use the following constraints: #{(join allowed, ', ')}."
       throw (new FlameError e)
       return
 
