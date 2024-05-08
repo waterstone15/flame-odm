@@ -1,5 +1,6 @@
 cloneDeep  = require 'lodash/cloneDeep'
 each       = require 'lodash/each'
+first      = require 'lodash/first'
 get        = require 'lodash/get'
 includes   = require 'lodash/includes'
 isInteger  = require 'lodash/isInteger'
@@ -61,8 +62,11 @@ class Pager
 
     collection_q = (cloneDeep @.q)
     reversed_q   = (map (cloneDeep collection_q), ((_q) ->
-      asc = (_q.length == 2) || ((_q.length == 3) && ((last _q) == 'asc'))
-      return if asc then [_q[0..1]..., 'desc'] else [_q[0..1]..., 'asc']
+      return switch
+        when ((first _q) == 'order-by') && ((last _q) == 'desc') then [_q[0..1]..., 'asc']
+        when ((first _q) == 'order-by') && ((last _q) == 'asc')  then [_q[0..1]..., 'desc']
+        when ((first _q) == 'order-by') && (_q.length == 2)      then [_q[0..1]..., 'desc']
+        else _q
     ))
 
     if (cursor && cursor.position == 'page-end')
