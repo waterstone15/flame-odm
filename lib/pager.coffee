@@ -21,6 +21,7 @@ class Pager
   type: 'Pager'
 
   allowed = [
+    'and'
     'eq'
     'eq-any'
     'gt'
@@ -31,6 +32,7 @@ class Pager
     'lte'
     'not-eq'
     'not-eq-any'
+    'or'
     'order-by'
     'page-size'
   ]

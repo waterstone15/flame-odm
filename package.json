@@ -11,7 +11,7 @@
     "bump:tag": "yarn bump --tag",
     "npm:publish": "npm publish",
     "test": "yarn mocha --parallel --require coffeescript/register --reporter list ./tests/**/*.coffee",
-    "test:watch": "yarn chokidar \"./**/*.coffee\" -c \"yarn mocha --slow 700 --parallel --require coffeescript/register --reporter list ./tests/pager.coffee\""
+    "test:watch": "yarn chokidar \"./**/*.coffee\" -c \"yarn mocha --slow 700 --parallel --require coffeescript/register --reporter list ./tests/wip.coffee\""
   },
   "files": [
     "./build/**",
