@@ -2,7 +2,7 @@
   "name": "flame-odm",
   "version": "0.10.0",
   "description": "Data model and query library for Firestore.",
-  "homepage": "https://flame-odm.com",
+  "homepage": "https://flame-odm.vercel.app",
   "scripts": {
     "prepack": "yarn build",
     "build": "run-s build:clean build:coffee",
