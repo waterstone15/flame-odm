@@ -1,6 +1,6 @@
 {
   "name": "flame-odm",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "Data model and query library for Firestore.",
   "homepage": "https://flame-odm.vercel.app",
   "scripts": {
@@ -83,7 +83,6 @@
   },
   "author": "Brian Waterstone <code@waterstone15.com>",
   "license": "MIT",
-  "private": false,
   "dependencies": {
     "@stablelib/random": "^1.0.2",
     "coffeescript": "^2.7.0",
