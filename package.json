@@ -1,6 +1,6 @@
 {
   "name": "flame-odm",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "description": "Data model and query library for Firestore.",
   "homepage": "https://flame-odm.vercel.app",
   "scripts": {
