@@ -17,6 +17,7 @@ max           = require 'lodash/max'
 min           = require 'lodash/min'
 pick          = require 'lodash/pick'
 reverse       = require 'lodash/reverse'
+slice         = require 'lodash/slice'
 { all }       = require 'rsvp'
 
 
@@ -220,15 +221,15 @@ class Adapter
       (if counts then (@.count model, queries.tail) else 0)
     ])
 
-    pg_count = (min [ pager.size, itemz.length ])
-    items    = itemz[0...pg_count]
+    pg_count = (min [ pager.size, (get itemz, 'length', 0) ])
+    items    = (slice itemz, 0, pg_count)
 
     if CPEND
       items = (reverse items)
       [ coll_first, coll_last ] = [ coll_last, coll_first ]
 
-    at_start = (isEqual coll_first, (first items))
-    at_end   = (isEqual coll_last, (last items))
+    at_start = (isEqual coll_first, (first items)) || (isEmpty items)
+    at_end   = (isEqual coll_last, (last items)) || (isEmpty items)
 
     previous = ({ obj: priorz[1], position: 'page-end' } if !at_start) ? null
     next     = ({ obj: itemz[pg_count], position: 'page-start' } if !at_end) ? null
