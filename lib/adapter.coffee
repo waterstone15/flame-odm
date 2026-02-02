@@ -88,7 +88,7 @@ class Adapter
           @.db   = (FBA_FIRESTORE.getFirestore @.fba)
           @.auth = (getAuth @.fba)
         catch e
-          throw (new FlameError "There was an error connecting to Firebase. Ref: 'other'")
+          throw (new FlameError "There was an error connecting to Firebase. Ref: 'process-env'")
           console.log e
         return
 
