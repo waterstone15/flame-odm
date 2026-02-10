@@ -65,8 +65,8 @@ class Adapter
           @.db   = FBA_FIRESTORE.initializeFirestore(@.fba, { preferRest: @.http }, @.dbid)
           @.auth = (getAuth @.fba)
         catch e
-          throw (new FlameError "There was an error connecting to Firebase. Ref: 'firebase-function'")
           console.log e
+          throw (new FlameError "There was an error connecting to Firebase. Ref: 'firebase-function'")
         return
 
 
@@ -77,8 +77,8 @@ class Adapter
           @.db   = (FBA_FIRESTORE.initializeFirestore @.fba, { preferRest: @.http }, @.dbid)
           @.auth = (getAuth @.fba)
         catch e
-          throw (new FlameError "There was an error connecting to Firebase. Ref: 'google-cloud'")
           console.log e
+          throw (new FlameError "There was an error connecting to Firebase. Ref: 'google-cloud'")
         return
 
 
@@ -90,8 +90,8 @@ class Adapter
           @.db   = (FBA_FIRESTORE.initializeFirestore @.fba, { preferRest: @.http }, @.dbid)
           @.auth = (getAuth @.fba)
         catch e
-          throw (new FlameError "There was an error connecting to Firebase. Ref: 'process-env'")
           console.log e
+          throw (new FlameError "There was an error connecting to Firebase. Ref: 'process-env'")
         return
 
 
@@ -104,8 +104,8 @@ class Adapter
           @.db   = (FBA_FIRESTORE.initializeFirestore @.fba, { preferRest: @.http }, @.dbid)
           @.auth = (getAuth @.fba)
         catch e
-          throw (new FlameError "There was an error connecting to Firebase. Ref: 'other'")
           console.log e
+          throw (new FlameError "There was an error connecting to Firebase. Ref: 'other'")
         return
     )
     await @.connecting
