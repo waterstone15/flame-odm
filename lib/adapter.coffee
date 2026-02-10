@@ -27,9 +27,11 @@ class Adapter
   type: 'Adapter'
 
 
-  constructor: (sa = null, name = 'flame-odm') ->
+  constructor: (sa = null, name = 'flame-odm', opts = {}) ->
     @.cfg  = if (isString sa) then {} else { sa }
     @.name = name
+    @.dbid = (get opts, 'dbid', '(default)')
+    @.http = (get opts, 'http', true)
 
     @.cloud = switch
       when (isFunction sa)             then 'other'
@@ -60,7 +62,7 @@ class Adapter
         try
           FBA_APP.initializeApp()
           @.fba  = FBA_APP.getApp()
-          @.db   = FBA_FIRESTORE.initializeFirestore(@.fba, { preferRest: true })
+          @.db   = FBA_FIRESTORE.initializeFirestore(@.fba, { preferRest: @.http }, @.dbid)
           @.auth = (getAuth @.fba)
         catch e
           throw (new FlameError "There was an error connecting to Firebase. Ref: 'firebase-function'")
@@ -72,7 +74,7 @@ class Adapter
         try
           (FBA_APP.initializeApp { credential: FBA_APP.applicationDefault() })
           @.fba  = FBA_APP.getApp()
-          @.db   = (FBA_FIRESTORE.initializeFirestore @.fba, { preferRest: true })
+          @.db   = (FBA_FIRESTORE.initializeFirestore @.fba, { preferRest: @.http }, @.dbid)
           @.auth = (getAuth @.fba)
         catch e
           throw (new FlameError "There was an error connecting to Firebase. Ref: 'google-cloud'")
@@ -85,7 +87,7 @@ class Adapter
           sa = (JSON.parse process.env.FB_SERVICE_ACCOUNT)
           (FBA_APP.initializeApp { credential: (FBA_APP.cert sa) }, @.name)
           @.fba  = (FBA_APP.getApp @.name)
-          @.db   = (FBA_FIRESTORE.initializeFirestore @.fba, { preferRest: true })
+          @.db   = (FBA_FIRESTORE.initializeFirestore @.fba, { preferRest: @.http }, @.dbid)
           @.auth = (getAuth @.fba)
         catch e
           throw (new FlameError "There was an error connecting to Firebase. Ref: 'process-env'")
@@ -99,7 +101,7 @@ class Adapter
           sa = await sa() if (isFunction sa)
           (FBA_APP.initializeApp { credential: (FBA_APP.cert sa) }, @.name)
           @.fba  = (FBA_APP.getApp @.name)
-          @.db   = (FBA_FIRESTORE.initializeFirestore @.fba, { preferRest: true })
+          @.db   = (FBA_FIRESTORE.initializeFirestore @.fba, { preferRest: @.http }, @.dbid)
           @.auth = (getAuth @.fba)
         catch e
           throw (new FlameError "There was an error connecting to Firebase. Ref: 'other'")
