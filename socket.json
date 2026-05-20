@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "defaults": {
+    "scan": {
+      "create": {
+        "repo": "flame-odm",
+        "workspace": "waterstone",
+        "branch": "main",
+        "autoManifest": false
+      }
+    }
+  }
+}
