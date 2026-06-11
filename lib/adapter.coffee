@@ -16,6 +16,7 @@ map           = require 'lodash/map'
 max           = require 'lodash/max'
 min           = require 'lodash/min'
 pick          = require 'lodash/pick'
+Query         = require './query'
 reverse       = require 'lodash/reverse'
 slice         = require 'lodash/slice'
 { all }       = require 'rsvp'
@@ -146,7 +147,8 @@ class Adapter
 
   find: (model, query, fields = null, transaction = null) ->
     await @.connect()
-    ls = await (@.findAll model, query, fields, transaction)
+    q = (new Query [ query.q..., [ 'limit', 1 ] ], query.serializer)
+    ls = await (@.findAll model, q, fields, transaction)
     return (first ls) ? null
 
 
